@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://mcm4y661qwbw"]
+[gd_scene load_steps=5 format=3 uid="uid://mcm4y661qwbw"]
 
 [ext_resource type="PackedScene" uid="uid://c3w2h2xkxh853" path="res://Scenes/test_player/test_player.tscn" id="1_3b3aw"]
+[ext_resource type="PackedScene" uid="uid://cxvjd8spsf1xo" path="res://Scenes/test_enemy/slime.tscn" id="2_lxjhd"]
 [ext_resource type="PackedScene" uid="uid://bvdnskab2v714" path="res://Scenes/test_world/test_world_tile_map.tscn" id="2_pxc8j"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_f22vo"]
@@ -21,3 +22,7 @@ shape = SubResource("WorldBoundaryShape2D_f22vo")
 [node name="test_camera" type="Camera2D" parent="test_player"]
 
 [node name="Test_world" parent="." instance=ExtResource("2_pxc8j")]
+
+[node name="slime" parent="." instance=ExtResource("2_lxjhd")]
+position = Vector2(860, 596)
+collision_mask = 5

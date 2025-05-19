@@ -5,6 +5,8 @@ extends Node2D
 @export var attack_box_location_right: Node
 @export var attack_box_location_left: Node
 
+var can_air_dash: bool
+
 #list of box shapes to queue free
 var attack_shapes: Array
 
@@ -12,6 +14,7 @@ var attack_shapes: Array
 signal air_dash_started
 
 func _ready():
+	can_air_dash = false
 	connect('air_dash_started', Callable(self, '_on_air_dash_start'))
 	
 func _physics_process(delta: float) -> void:
@@ -31,6 +34,9 @@ func downward_thrust():
 			var rectangle_shape = RectangleShape2D.new()
 			rectangle_shape.size = Vector2(32, 32) 
 			thrust_box_shape.shape = rectangle_shape
+			#set the collision layer and mask
+			thrust_box.collision_layer = 1
+			thrust_box.collision_mask = 5
 			match parent.previous_direction: #checks the direction and puts that box in the facing direction
 				1.0:
 					thrust_box.position = attack_box_location_right.position
@@ -42,18 +48,22 @@ func downward_thrust():
 				attack_shapes.append(thrust_box_shape)
 			print('heavy attacking')
 	if parent.is_on_floor():
+		can_air_dash = true
 		for node in attack_shapes:
 			node.queue_free()
 			attack_shapes = []
 
 func air_dash():
-	if state_handler.movement_state == 'jumping' or state_handler.movement_state == 'falling':
+	if (state_handler.movement_state == 'jumping' or state_handler.movement_state == 'falling') and can_air_dash == true:
 		if Input.is_action_just_pressed('light attack'):
 			parent.velocity = Vector2(parent.velocity.x * parent.agility, parent.velocity.y)
+			can_air_dash = false
 			emit_signal('air_dash_started')
 
 func _on_air_dash_started():
 	await get_tree().create_timer(0.5).timeout
 	parent.velocity.x = parent.direction
 			
+
+	
 			
